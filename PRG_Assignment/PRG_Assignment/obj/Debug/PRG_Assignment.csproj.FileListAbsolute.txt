@@ -25,3 +25,12 @@ C:\Users\caden\OneDrive\Desktop\Working Laptop\Programming Related\C#\Assignment
 C:\Users\caden\OneDrive\Desktop\Working Laptop\Programming Related\C#\Assignment\C# Assignment Repo\PRG_Assignment\PRG_Assignment\obj\Debug\PRG_Assignment.csproj.CoreCompileInputs.cache
 C:\Users\caden\OneDrive\Desktop\Working Laptop\Programming Related\C#\Assignment\C# Assignment Repo\PRG_Assignment\PRG_Assignment\obj\Debug\PRG_Assignment.exe
 C:\Users\caden\OneDrive\Desktop\Working Laptop\Programming Related\C#\Assignment\C# Assignment Repo\PRG_Assignment\PRG_Assignment\obj\Debug\PRG_Assignment.pdb
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\bin\Debug\customers.csv
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\bin\Debug\orders.csv
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\bin\Debug\PRG_Assignment.exe.config
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\bin\Debug\PRG_Assignment.exe
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\bin\Debug\PRG_Assignment.pdb
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\obj\Debug\PRG_Assignment.csproj.AssemblyReference.cache
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\obj\Debug\PRG_Assignment.csproj.CoreCompileInputs.cache
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\obj\Debug\PRG_Assignment.exe
+D:\AY23 Y1S2\PRG II\Assignment\New folder\PRG_Assignment\PRG_Assignment\obj\Debug\PRG_Assignment.pdb

@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿//==========================================================
+// Student ID   : S10241624
+// Student Name : Hendrik Yong
+// Partner ID   : S10257971
+// Partner Name : Caden Toh
+//==========================================================
+using System.Collections.Generic;
 
 namespace PRG_Assignment
 {

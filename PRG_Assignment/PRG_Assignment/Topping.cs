@@ -1,4 +1,10 @@
-﻿namespace PRG_Assignment
+﻿//==========================================================
+// Student ID   : S10241624
+// Student Name : Hendrik Yong
+// Partner ID   : S10257971
+// Partner Name : Caden Toh
+//==========================================================
+namespace PRG_Assignment
 {
     class Topping
     {

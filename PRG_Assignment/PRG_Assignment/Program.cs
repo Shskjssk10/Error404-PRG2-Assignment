@@ -1,4 +1,10 @@
-﻿using System;
+﻿//==========================================================
+// Student ID   : S10241624
+// Student Name : Hendrik Yong
+// Partner ID   : S10257971
+// Partner Name : Caden Toh
+//==========================================================
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,10 +23,10 @@ namespace PRG_Assignment
         static void Main(string[] args)
         {
             Dictionary<int, Customer> customerDict = InitData();
-            //Option1(customerDict);
+            Option1(customerDict);
             //Option2(customerDict);
             //Option3(customerDict);
-            Option4(customerDict);
+            //Option4(customerDict);
             //Option5(customerDict);
             //Option6(customerDict);
         }
@@ -301,7 +307,6 @@ namespace PRG_Assignment
                         var wantTopping = Console.ReadLine().Trim().ToLower();
                         if (wantTopping == "y")
                         {
-                            int l = 1;
                             for (int m = 1; m <= 4; m++)
                             {
                                 Console.WriteLine();
