@@ -17,9 +17,9 @@ namespace PRG_Assignment
             
         }
 
-        public Waffle(string o, int s, List<Flavour> f, List<Topping> t):base(o,s,f,t)
+        public Waffle(string o, int s, List<Flavour> f, List<Topping> t, string wf):base(o,s,f,t)
         {
-            
+            waffleFlavour = wf;
         }
 
         public override double CalculatePrice()

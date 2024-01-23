@@ -8,6 +8,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
+using System.Diagnostics;
 
 namespace PRG_Assignment
 {
@@ -208,11 +209,13 @@ namespace PRG_Assignment
             List<string> options = new List<string>() { "cup", "cone", "waffle" };
             List<string> flavours = new List<string>() { "Vanilla", "Chocolate", "Strawberry", "Durian", "Ube", "Sea salt" };
             List<string> toppings = new List<string>() { "Sprinkles", "Mochi", "Sago", "Oreos" };
+            List<string> specialFlavour = new List<string>() { "Red velvet", "Charcoal", "Pandan Waffle" };
 
             Console.Write("Select a customer: ");
             var selectedCustomer = Console.ReadLine().Trim().ToLower();
             foreach (var customer in customerDict)
             {
+                //Check if selected customer exist 
                 if (customer.Value.Name.Trim().ToLower().Contains(selectedCustomer))
                 {
                     Order order = new Order(customer.Value.MemberID, DateTime.Now);
@@ -228,108 +231,133 @@ namespace PRG_Assignment
                     Console.Write("Ice Cream Option: ");
                     var selectedOption = Convert.ToInt32(Console.ReadLine());
 
-                    //If Cup is chosen 
-                    if (selectedOption == 1)
+                    //Scoops, flavour and topping
+
+                    //Initialise List
+
+                    List<Flavour> userFlavourList = new List<Flavour>();
+                    List<Topping> userToppingList = new List<Topping>();
+
+                    //Choose no. of scoops 
+                    Console.Write("Enter number of scoops (1-3): ");
+                    var scoops = Convert.ToInt32(Console.ReadLine());
+                    if (scoops < 1 || scoops > 3)
                     {
-                        //Choose no. of scoops 
-                        Console.Write("Enter number of scoops (1-3): ");
-                        var scoops = Convert.ToInt32(Console.ReadLine());
-                        if (scoops < 1 || scoops > 3)
+                        Console.WriteLine("Invalid scoop number.");
+                    }
+                    else
+                    {
+                        //List containing flavours chosen by user 
+                        int inputtedFlavours = 0;
+                        while (inputtedFlavours != scoops)
                         {
-                            Console.WriteLine("Invalid scoop number.");
-                        }
-                        else
-                        {
-                            //List containing flavours chosen by user 
-                            List<Flavour> userFlavourList = new List<Flavour>();
-                            int inputtedFlavours = 0;
-                            while(inputtedFlavours != scoops)
+                            int counter = 1;
+                            Console.WriteLine();
+                            Console.WriteLine("Flavour Options");
+                            foreach (var flavour in flavours)
                             {
-                                int counter = 1;
-                                Console.WriteLine();
-                                Console.WriteLine("Flavour Options");
-                                foreach (var flavour in flavours)
+                                Console.WriteLine($"[{counter++}] {flavour}");
+                            }
+                            Console.Write("Select Flavour: ");
+                            //Choose flavour 
+                            var userFlavour = Convert.ToInt32(Console.ReadLine().Trim());
+                            //Number of selected flavour 
+                            var userFlavourNo = 0;
+
+                            //Check that inputted flavours do not exceed number of scoops 
+                            while (true)
+                            {
+                                Console.Write($"No. of {flavours[userFlavour - 1]}:");
+                                userFlavourNo = Convert.ToInt32(Console.ReadLine().Trim());
+
+                                //To validate
+                                if (userFlavourNo == 0)
                                 {
-                                    Console.WriteLine($"[{counter++}] {flavour}");
+                                    Console.WriteLine("Number of flavour cannot be 0.");
                                 }
-                                Console.Write("Select Flavour: ");
-                                //Choose flavour 
-                                var userFlavour = Convert.ToInt32(Console.ReadLine().Trim());
-                                //Number of selected flavour 
-                                var userFlavourNo = 0;
-
-                                //Check that inputted flavours do not exceed number of scoops 
-                                while (true)
+                                else if ((inputtedFlavours + userFlavourNo) > scoops)
                                 {
-                                    Console.Write($"No. of {flavours[userFlavour - 1]}:");
-                                    userFlavourNo = Convert.ToInt32(Console.ReadLine().Trim());
-
-                                    //To validate
-                                    if (userFlavourNo == 0)
+                                    Console.WriteLine($"Exceeded number of flavours, please make sure its less than {scoops}");
+                                }
+                                else
+                                {
+                                    inputtedFlavours += userFlavourNo;
+                                    //Apending flavour to flavourList 
+                                    if (userFlavour > 3)
                                     {
-                                        Console.WriteLine("Number of flavour cannot be 0.");
-                                    }
-                                    else if ((inputtedFlavours + userFlavourNo) > scoops)
-                                    {
-                                        Console.WriteLine($"Exceeded number of flavours, please make sure its less than {scoops}");
+                                        userFlavourList.Add(new Flavour(flavours[userFlavour - 1], false, userFlavourNo));
                                     }
                                     else
                                     {
-                                        inputtedFlavours += userFlavourNo;
-                                        //Apending flavour to flavourList 
-                                        if (userFlavour > 3)
-                                        {
-                                            userFlavourList.Add(new Flavour(flavours[userFlavour - 1], false, userFlavourNo));
-                                        }
-                                        else
-                                        {
-                                            userFlavourList.Add(new Flavour(flavours[userFlavour - 1], true, userFlavourNo));
-                                        }
-                                        break;
+                                        userFlavourList.Add(new Flavour(flavours[userFlavour - 1], true, userFlavourNo));
                                     }
+                                    break;
                                 }
                             }
-                            Console.WriteLine();
-                            //Ask if user want topping 
-                            Console.Write("Do you want toppings[y/n]: ");
-                            var wantTopping = Console.ReadLine().Trim().ToLower();
-                            List<Topping> userToppingList = new List<Topping>();
-                            if (wantTopping == "y")
+                        }
+                        Console.WriteLine();
+                        //Ask if user want topping 
+                        Console.Write("Do you want toppings[y/n]: ");
+                        var wantTopping = Console.ReadLine().Trim().ToLower();
+                        if (wantTopping == "y")
+                        {
+                            int l = 1;
+                            for (int m = 1; m <= 4; m++)
                             {
-                                int l = 1;
-                                for (int m = 1; m <= 4; m++)
-                                {
-                                    Console.WriteLine();
-                                    Console.WriteLine("Choose Topping");
-                                    Console.WriteLine($"[1] {toppings[0]}");
-                                    Console.WriteLine($"[2] {toppings[1]}");
-                                    Console.WriteLine($"[3] {toppings[2]}");
-                                    Console.WriteLine($"[4] {toppings[3]}");
-                                    Console.Write("Select Topping: ");
-                                    var userTopping = Convert.ToInt32(Console.ReadLine().Trim());
-                                    userToppingList.Add(new Topping(toppings[userTopping - 1]));
+                                Console.WriteLine();
+                                Console.WriteLine("Choose Topping");
+                                Console.WriteLine($"[1] {toppings[0]}");
+                                Console.WriteLine($"[2] {toppings[1]}");
+                                Console.WriteLine($"[3] {toppings[2]}");
+                                Console.WriteLine($"[4] {toppings[3]}");
+                                Console.Write("Select Topping: ");
+                                var userTopping = Convert.ToInt32(Console.ReadLine().Trim());
+                                userToppingList.Add(new Topping(toppings[userTopping - 1]));
 
-                                    Console.Write("Do you want another topping?[y/n]: ");
-                                    var anotherTopping = Console.ReadLine().Trim().ToLower();
-                                    if (anotherTopping == "n")
-                                    {
-                                        break;
-                                    }
+                                Console.Write("Do you want another topping?[y/n]: ");
+                                var anotherTopping = Console.ReadLine().Trim().ToLower();
+                                if (anotherTopping == "n")
+                                {
+                                    break;
                                 }
                             }
-                            Cup cup = new Cup("Cup", scoops, userFlavourList, userToppingList);
-                            Console.WriteLine(cup.ToString());
-
                         }
                     }
+
+                    //If Cup is chosen 
+                    if (selectedOption == 1)
+                    {
+                        IceCream cup = new Cup("Cup", scoops, userFlavourList, userToppingList);
+                        Console.WriteLine(cup.ToString());
+                    }
+                    //If Cone is chosen
                     else if (selectedOption == 2)
                     {
-
+                        Console.Write("Would you like your cone to be dipped in chocolate [y/n]: ");
+                        string option = Console.ReadLine();
+                        if (option == "y")
+                        {
+                            IceCream cone = new Cone("Cone", scoops, userFlavourList, userToppingList);
+                        }
                     }
-
                     else if (selectedOption == 3)
                     {
-
+                        Console.Write("Would you like your waffle to be a special flavour [y/n]: ");
+                        string option = Console.ReadLine(); 
+                        if (option == "y")
+                        {
+                            foreach (string flavour in specialFlavour)
+                            {
+                                int counter = 1;
+                                Console.WriteLine($"[{counter}] {flavour}");
+                            }
+                            int specialFlavourOption = Convert.ToInt32(Console.ReadLine().Trim());
+                            IceCream waffle = new Waffle("Waffle", scoops, userFlavourList, userToppingList, specialFlavour[specialFlavourOption-1]);
+                        }
+                        else
+                        {
+                            IceCream waffle = new Waffle("Waffle", scoops, userFlavourList, userToppingList, "Original");
+                        }
                     }
                     else
                     {
