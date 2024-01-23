@@ -24,12 +24,47 @@ namespace PRG_Assignment
 
         public override double CalculatePrice()
         {
-            return 6.5;
+            double totalCost = 0;
+            List<double> scoopPrice = new List<double>() { 4.00, 5.50, 6.50 };
+            foreach (var flavour in Flavours)
+            {
+                if (flavour.Premium == true)
+                {
+                    totalCost += 2;
+                }
+            }
+            totalCost += scoopPrice[Scoops - 1];
+            if (waffleFlavour != "Original")
+            {
+                totalCost += 3;
+            }
+            return totalCost;
         }
 
         public override string ToString()
         {
-            return $"waffle class working";
+            string flavourList = "";
+            string toppingList = "";
+            int counter = 1;
+            foreach (var flavour in Flavours)
+            {
+                flavourList += $"[{counter}] {flavour.Type} ({flavour.Quantity})\n";
+                counter++;
+            }
+            if (Toppings.Count > 0)
+            {
+                counter = 1;
+                foreach (var topping in Toppings)
+                {
+                    toppingList += $"[{counter}] {topping.Type}\n";
+                    counter++;
+                }
+            }
+            else
+            {
+                toppingList = "None";
+            }
+            return $"Type: {Option} \nScoops: {Scoops}\nFlavours: \n{flavourList}Toppings:\n{toppingList}\nWaffle Flavour: {WaffleFlavour}";
         }
     }
 }
