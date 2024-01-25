@@ -27,6 +27,7 @@ namespace PRG_Assignment
             Dictionary<int, Customer> customerDict = InitData();
             while (true)
             {
+                //Menu interface containing options for user to enter
                 MenuInterface();
                 string option = Console.ReadLine();
                 if (option == "1")
@@ -65,6 +66,11 @@ namespace PRG_Assignment
                     Console.WriteLine("Thank you! Goodbye :D");
                     break;  
                 }
+                // Test case for Caden -- help delete if this is still here ================================================================
+                else if (option == "caden")
+                {
+                    //Currently empty intentionally
+                }
                 else
                 {
                     Console.WriteLine("Please return a valid input. An integer between 0-6 inclusive!");
@@ -81,27 +87,129 @@ namespace PRG_Assignment
 
         static Dictionary<int, Customer> InitData()
         {
+            // Creates customer objects and apends all PointCard relevant data into it. 
+            // At the moment does not append orderHistory
             Dictionary<int, Customer> customerDict = new Dictionary<int, Customer>();
             using (StreamReader sr = new StreamReader("customers.csv"))
             {
                 string header = sr.ReadLine();
-                //Console.WriteLine(header);
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
+                string line;
+
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] contents = line.Split(',');
+                    if (int.TryParse(contents[1], out int memId) &&
+                        DateTime.TryParse(contents[2], out DateTime dob))
                     {
-                        string[] contents = line.Split(',');
-                        if (int.TryParse(contents[1], out int memId) &&
-                            DateTime.TryParse(contents[2], out DateTime dob))
-                        {
-                            Customer customer = new Customer(contents[0], memId, dob);
-                            customer.Rewards.Tier = contents[3];
-                            customer.Rewards.Points = int.Parse(contents[4]);
-                            customer.Rewards.PunchCard = int.Parse(contents[5]);
-                            customerDict.Add(memId, customer);
-                        }
+                        Customer customer = new Customer(contents[0], memId, dob);
+                        customer.Rewards.Tier = contents[3];
+                        customer.Rewards.Points = int.Parse(contents[4]);
+                        customer.Rewards.PunchCard = int.Parse(contents[5]);
+                        customerDict.Add(memId, customer);
                     }
+                }
             }
 
+            string orderPath = "orders.csv";
+            string[] orderContents = File.ReadAllLines(orderPath);
+            string format = "dd/MM/yyyy HH:mm";
+            List<Order> tempOrderList = new List<Order>();
+
+            // foreach loop to create order objects 
+            foreach (string line in orderContents)
+            {
+                string[] selectedLine = line.Split(',');
+                tempOrderList.Add(new Order(Convert.ToInt32(selectedLine[0]), DateTime.ParseExact(selectedLine[2], format, null)));
+            }
+
+            // foreach loop to append respective data to each order object
+            foreach (string line in orderContents)
+            {
+                string[] selectedLine = line.Split(',');
+                // Match current line of order to list of orders
+                foreach (Order order in tempOrderList)
+                {
+                    // Apends TimeFulfilled data 
+                    if (Convert.ToInt32(selectedLine[0]) == order.Id)
+                    {
+                        if (selectedLine[3] == null)
+                        {
+                            order.TimeFulfilled = null;
+                        }
+                        else
+                        {
+                            order.TimeFulfilled = DateTime.ParseExact(selectedLine[3], format, null);
+                        }
+                    }
+
+                    int scoops = Convert.ToInt32(selectedLine[5]);
+                    List<Topping> toppingList = new List<Topping>();
+                    List<Flavour> flavourList = new List<Flavour>();
+
+                    // Prepare Flavour List
+                    for (int i = 8; i < scoops + 8; i++)
+                    {
+                        // Checks if there is duplicate, else new flavour is created 
+                        foreach (Flavour flavour in flavourList)
+                        {
+                            if (selectedLine[i] == flavour.Type)
+                            {
+                                flavour.Quantity++;
+                            }
+                            else
+                            {
+                                // Checks if flavour is premium; true for premium.
+                                if (selectedLine[i] == "Vanilla" || selectedLine[i] == "Chocolate" || selectedLine[i] == "Strawberry")
+                                {
+                                    flavourList.Add(new Flavour(selectedLine[i], false, 1));
+                                }
+                                else
+                                {
+                                    flavourList.Add(new Flavour(selectedLine[i], true, 1));
+                                }
+                            }
+                        }
+                    }
+
+                    // Prepare toppings list
+                    for (int i = 11; i < 15; i++)
+                    {
+                        // Check 
+                        if (selectedLine[i] != null)
+                        {
+                            toppingList.Add(new Topping(selectedLine[i]));
+                        }
+                    }
+
+                    // Checks if Icecream is cup, cone or waffle
+                    if (selectedLine[4] == "Cup")
+                    {
+                        order.IceCreamList.Add(new Cup(selectedLine[4], scoops, flavourList, toppingList));
+                    }
+                    else if (selectedLine[4] == "Cone")
+                    {
+                        if (selectedLine[6] == "TRUE")
+                        {
+                            order.IceCreamList.Add(new Cone(selectedLine[6], scoops, flavourList, toppingList, true));
+                        }
+                        else
+                        {
+                            order.IceCreamList.Add(new Cone(selectedLine[6], scoops, flavourList, toppingList, false));
+                        }
+                    }
+                    else
+                    {
+                        if (selectedLine[7] != null)
+                        {
+                            order.IceCreamList.Add(new Waffle(selectedLine[7], scoops, flavourList, toppingList, selectedLine[7]));
+                        }
+                        else
+                        {
+                            order.IceCreamList.Add(new Waffle(selectedLine[7], scoops, flavourList, toppingList, null));
+                        }
+                    }
+                }
+            }
             return customerDict;
         }
 
@@ -184,7 +292,7 @@ namespace PRG_Assignment
             customerDict.Add(id, customer);
 
 
-            using (StreamWriter sw = new StreamWriter("customers.csv", true, Encoding.UTF8))
+            using (StreamWriter sw = new StreamWriter("customers.csv"))
             {
                 sw.Write($"{customer.Name},{customer.MemberID},{customer.Dob.ToShortDateString()},{customer.Rewards.Tier},{customer.Rewards.Points},{customer.Rewards.PunchCard}\n");
                 Console.WriteLine("Customer successfully appended to customers.csv");
@@ -494,7 +602,11 @@ namespace PRG_Assignment
                         string option = Console.ReadLine();
                         if (option == "y")
                         {
-                            IceCream cone = new Cone("Cone", scoops, userFlavourList, userToppingList);
+                            IceCream cone = new Cone("Cone", scoops, userFlavourList, userToppingList, true);
+                        }
+                        else
+                        {
+                            IceCream cone = new Cone("Cone", scoops, userFlavourList, userToppingList, false);
                         }
                     }
                     else if (selectedOption == 3)

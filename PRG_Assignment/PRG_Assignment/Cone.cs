@@ -23,9 +23,9 @@ namespace PRG_Assignment
             
         }
 
-        public Cone(string o, int s, List<Flavour> f, List<Topping> t) :base(o,s,f,t)
+        public Cone(string o, int s, List<Flavour> f, List<Topping> t, bool d) :base(o,s,f,t)
         {
-            
+            dipped = d;
         }
 
         public override double CalculatePrice()

@@ -58,7 +58,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="customers.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="orders.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
