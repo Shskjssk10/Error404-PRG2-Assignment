@@ -22,13 +22,60 @@ namespace PRG_Assignment
     {
         static void Main(string[] args)
         {
+
             Dictionary<int, Customer> customerDict = InitData();
-            Option1(customerDict);
-            //Option2(customerDict);
-            //Option3(customerDict);
-            //Option4(customerDict);
-            //Option5(customerDict);
-            //Option6(customerDict);
+            while (true)
+            {
+                MenuInterface();
+                string option = Console.ReadLine();
+                if (option == "1")
+                {
+                    Option1(customerDict);
+                    Console.WriteLine();
+                }
+                else if (option == "2")
+                {
+                    Option2(customerDict);
+                    Console.WriteLine();
+                }
+                else if (option == "3")
+                {
+                    Option3 (customerDict);
+                    Console.WriteLine();
+                }
+                else if (option == "4")
+                {
+                    Option4 (customerDict);
+                    Console.WriteLine();
+                }
+                else if (option == "5")
+                {
+                    Option5(customerDict);
+                    Console.WriteLine();
+                }
+                else if (option == "6")
+                {
+                    Option6(customerDict);
+                    Console.WriteLine();
+                }
+                else if (option == "0")
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Thank you! Goodbye :D");
+                    break;  
+                }
+                else
+                {
+                    Console.WriteLine("Please return a valid input. An integer between 0-6 inclusive!");
+                }
+            }
+        }
+
+        static void MenuInterface()
+        {
+            Console.Write("================= MENU INTERFACE =================\n[1] List all customers\n[2] List all current orders\n[3] Register" +
+                "a new customer\n[4] Create a customer's order\n[5] Display order details of a customer\n[6] Modify order details\n" +
+                "[0] Exit\n==================================================\nEnter option: ");
         }
 
         static Dictionary<int, Customer> InitData()
