@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 using System.Diagnostics;
+using System.Xml.Schema;
 
 namespace PRG_Assignment
 {
@@ -74,7 +75,7 @@ namespace PRG_Assignment
         static void MenuInterface()
         {
             Console.Write("================= MENU INTERFACE =================\n[1] List all customers\n[2] List all current orders\n[3] Register" +
-                "a new customer\n[4] Create a customer's order\n[5] Display order details of a customer\n[6] Modify order details\n" +
+                " a new customer\n[4] Create a customer's order\n[5] Display order details of a customer\n[6] Modify order details\n" +
                 "[0] Exit\n==================================================\nEnter option: ");
         }
 
@@ -263,9 +264,11 @@ namespace PRG_Assignment
             List<string> flavours = new List<string>() { "Vanilla", "Chocolate", "Strawberry", "Durian", "Ube", "Sea salt" };
             List<string> toppings = new List<string>() { "Sprinkles", "Mochi", "Sago", "Oreos" };
             List<string> specialFlavour = new List<string>() { "Red velvet", "Charcoal", "Pandan Waffle" };
+            List<string> customerOptions = new List<string>();
 
             Console.Write("Select a customer: ");
             var selectedCustomer = Console.ReadLine().Trim().ToLower();
+
             foreach (var customer in customerDict)
             {
                 //Check if selected customer exist 
@@ -280,9 +283,36 @@ namespace PRG_Assignment
                     {
                         Console.WriteLine($"[{i++}] {option}");
                     }
-                    //Choose Waffle, Cone or Cup 
-                    Console.Write("Ice Cream Option: ");
-                    var selectedOption = Convert.ToInt32(Console.ReadLine());
+                    //choose waffle, cone or cup
+                    var selectedOption = 0;
+
+                    // Validation for IceCream option
+                    while (true)
+                    {
+                        try
+                        {
+                            Console.Write("Ice Cream Option: ");
+                            selectedOption = Convert.ToInt32(Console.ReadLine());
+                            if (selectedOption > 0 && selectedOption < 4)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Please ensure an integer between 1-3");
+                            }
+                        }
+                        catch (FormatException e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine("Ensure that an integer between 1-3 is entered");
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine("Error occurred.");
+                        }
+                    }
 
                     //Scoops, flavour and topping
 
@@ -292,86 +322,161 @@ namespace PRG_Assignment
                     List<Topping> userToppingList = new List<Topping>();
 
                     //Choose no. of scoops 
-                    Console.Write("Enter number of scoops (1-3): ");
-                    var scoops = Convert.ToInt32(Console.ReadLine());
-                    if (scoops < 1 || scoops > 3)
+                    var scoops = 0;
+                    while (true)
                     {
-                        Console.WriteLine("Invalid scoop number.");
-                    }
-                    else
-                    {
-                        //List containing flavours chosen by user 
-                        int inputtedFlavours = 0;
-                        while (inputtedFlavours != scoops)
+                        try
                         {
-                            int counter = 1;
-                            Console.WriteLine();
-                            Console.WriteLine("Flavour Options");
-                            foreach (var flavour in flavours)
+                            Console.Write("Enter number of scoops (1-3): ");
+                            scoops = Convert.ToInt32(Console.ReadLine());
+                            if (scoops > 0 && scoops < 4)
                             {
-                                Console.WriteLine($"[{counter++}] {flavour}");
+                                break;
                             }
-                            Console.Write("Select Flavour: ");
-                            //Choose flavour 
-                            var userFlavour = Convert.ToInt32(Console.ReadLine().Trim());
-                            //Number of selected flavour 
-                            var userFlavourNo = 0;
-
-                            //Check that inputted flavours do not exceed number of scoops 
-                            while (true)
+                            else
                             {
-                                Console.Write($"No. of {flavours[userFlavour - 1]}:");
-                                userFlavourNo = Convert.ToInt32(Console.ReadLine().Trim());
+                                Console.WriteLine("Please enter an integer between 1-3.");
+                            }
+                        }
+                        catch (FormatException e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine("Please enter an integer between 1-3.");
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
+                    }
 
-                                //To validate
-                                if (userFlavourNo == 0)
+                    //List containing flavours chosen by user 
+                    int inputtedFlavours = 0;
+                    while (inputtedFlavours != scoops)
+                    {
+                        int counter = 1;
+                        Console.WriteLine();
+                        Console.WriteLine("Flavour Options");
+                        foreach (var flavour in flavours)
+                        {
+                            Console.WriteLine($"[{counter++}] {flavour}");
+                        }
+                        //Choose flavour 
+                        var userFlavour = 0;
+                        while (true)
+                        {
+                            try
+                            {
+                                Console.Write("Select Flavour: ");
+                                userFlavour = Convert.ToInt32(Console.ReadLine().Trim());
+                                if (userFlavour > 0 && userFlavour < 7)
                                 {
-                                    Console.WriteLine("Number of flavour cannot be 0.");
-                                }
-                                else if ((inputtedFlavours + userFlavourNo) > scoops)
-                                {
-                                    Console.WriteLine($"Exceeded number of flavours, please make sure its less than {scoops}");
+                                    break;
                                 }
                                 else
                                 {
-                                    inputtedFlavours += userFlavourNo;
-                                    //Apending flavour to flavourList 
-                                    if (userFlavour > 3)
-                                    {
-                                        userFlavourList.Add(new Flavour(flavours[userFlavour - 1], false, userFlavourNo));
-                                    }
-                                    else
-                                    {
-                                        userFlavourList.Add(new Flavour(flavours[userFlavour - 1], true, userFlavourNo));
-                                    }
-                                    break;
+                                    Console.WriteLine("Please enter an integer between 1-6.");
                                 }
                             }
-                        }
-                        Console.WriteLine();
-                        //Ask if user want topping 
-                        Console.Write("Do you want toppings[y/n]: ");
-                        var wantTopping = Console.ReadLine().Trim().ToLower();
-                        if (wantTopping == "y")
-                        {
-                            for (int m = 1; m <= 4; m++)
+                            catch (FormatException e)
                             {
-                                Console.WriteLine();
-                                Console.WriteLine("Choose Topping");
-                                Console.WriteLine($"[1] {toppings[0]}");
-                                Console.WriteLine($"[2] {toppings[1]}");
-                                Console.WriteLine($"[3] {toppings[2]}");
-                                Console.WriteLine($"[4] {toppings[3]}");
-                                Console.Write("Select Topping: ");
-                                var userTopping = Convert.ToInt32(Console.ReadLine().Trim());
-                                userToppingList.Add(new Topping(toppings[userTopping - 1]));
+                                Console.WriteLine(e.Message);
+                                Console.WriteLine("Please enter an integer between 1-6.");
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                                Console.WriteLine("Please enter an integer between 1-6.");
+                            }
+                        }
 
-                                Console.Write("Do you want another topping?[y/n]: ");
-                                var anotherTopping = Console.ReadLine().Trim().ToLower();
-                                if (anotherTopping == "n")
+                        //Number of selected flavour 
+                        var userFlavourNo = 0;
+
+                        //Check that inputted flavours do not exceed number of scoops 
+                        while (true)
+                        {
+
+                            //Validate input type
+                            while (true)
+                            {
+                                try
                                 {
+                                    Console.Write($"No. of {flavours[userFlavour - 1]}:");
+                                    userFlavourNo = Convert.ToInt32(Console.ReadLine().Trim());
                                     break;
                                 }
+                                catch (FormatException e)
+                                {
+                                    Console.WriteLine(e.Message);
+                                    Console.WriteLine("Enter a valid integer");
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.Message);
+                                    Console.WriteLine("Enter a valid integer");
+                                }
+                            }
+
+                            //Validate if inputted number is within range
+                            if (userFlavourNo == 0)
+                            {
+                                Console.WriteLine("Number of flavour cannot be 0.");
+                            }
+                            else if ((inputtedFlavours + userFlavourNo) > scoops)
+                            {
+                                Console.WriteLine($"Exceeded number of flavours, please make sure its less than {scoops}");
+                            }
+                            else
+                            {
+                                inputtedFlavours += userFlavourNo;
+                                //Apending flavour to flavourList 
+                                if (userFlavour > 3)
+                                {
+                                    userFlavourList.Add(new Flavour(flavours[userFlavour - 1], false, userFlavourNo));
+                                }
+                                else
+                                {
+                                    userFlavourList.Add(new Flavour(flavours[userFlavour - 1], true, userFlavourNo));
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    Console.WriteLine();
+                    //Ask if user want topping 
+                    var wantTopping = "";
+                    while (true)
+                    {
+                        Console.Write("Do you want toppings[y/n]: ");
+                        wantTopping = Console.ReadLine().Trim().ToLower();
+                        if (wantTopping == "y" || wantTopping == "n")
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Please enter either a 'y' or 'n'");
+                        }
+                    }
+                    if (wantTopping == "y")
+                    {
+                        for (int m = 1; m <= 4; m++)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Choose Topping");
+                            Console.WriteLine($"[1] {toppings[0]}");
+                            Console.WriteLine($"[2] {toppings[1]}");
+                            Console.WriteLine($"[3] {toppings[2]}");
+                            Console.WriteLine($"[4] {toppings[3]}");
+                            Console.Write("Select Topping: ");
+                            var userTopping = Convert.ToInt32(Console.ReadLine().Trim());
+                            userToppingList.Add(new Topping(toppings[userTopping - 1]));
+
+                            Console.Write("Do you want another topping?[y/n]: ");
+                            var anotherTopping = Console.ReadLine().Trim().ToLower();
+                            if (anotherTopping == "n")
+                            {
+                                break;
                             }
                         }
                     }
@@ -418,5 +523,6 @@ namespace PRG_Assignment
                 }
             }
         }
+
     }
 }
